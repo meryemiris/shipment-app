@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
 export interface Shipment {
   orderNo: string;
@@ -9,28 +10,45 @@ export interface Shipment {
   consignee: string;
 }
 
-interface ShipmentState {
+export interface ShipmentState {
   shipments: Shipment[];
   selectedShipment: Shipment | null;
+  isLoading: boolean;
+  error: string | null | undefined;
 }
 
 const initialState: ShipmentState = {
   shipments: [],
   selectedShipment: null,
+  isLoading: false,
+  error: null,
 };
 
-const shipment = createSlice({
+export const fetchShipments = createAsyncThunk(
+  "shipment/fetchShipments",
+  async () => {
+    const response = await axios.get("../../shipment.txt");
+    return response.data;
+  }
+);
+
+export const shipmentSlice = createSlice({
   name: "shipment",
   initialState,
-  reducers: {
-    setShipments: (state, action: PayloadAction<Shipment[]>) => {
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchShipments.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(fetchShipments.fulfilled, (state, action) => {
+      state.isLoading = false;
       state.shipments = action.payload;
-    },
-    setSelectedShipment: (state, action: PayloadAction<Shipment | null>) => {
-      state.selectedShipment = action.payload;
-    },
+    });
+    builder.addCase(fetchShipments.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    });
   },
 });
 
-export const { setShipments, setSelectedShipment } = shipment.actions;
-export default shipment.reducer;
+export default shipmentSlice.reducer;

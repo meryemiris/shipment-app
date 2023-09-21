@@ -1,13 +1,11 @@
 import { Shipment } from "../store/shipment";
-import { setShipments } from "../store/shipment";
 import { RootState } from "../store/store";
+import { fetchShipments } from "../store/shipment";
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
-
-import axios from "axios";
 
 import {
   Table,
@@ -29,14 +27,23 @@ interface ShipmentTableProps {
 
 const ShipmentTable: React.FC<ShipmentTableProps> = () => {
   const dispatch = useDispatch();
-  const shipments = useSelector((state: RootState) => state.shipment.shipments);
+  type FetchShipmentsThunk = ReturnType<typeof fetchShipments>;
 
   useEffect(() => {
-    axios
-      .get("../../shipment.txt")
-      .then((response) => dispatch(setShipments(response.data)))
-      .catch((error) => console.error("Error loading shipments:", error));
+    dispatch(fetchShipments() as FetchShipmentsThunk);
   }, [dispatch]);
+
+  const shipments = useSelector((state: RootState) => state.shipment.shipments);
+  const isLoading = useSelector((state: RootState) => state.shipment.isLoading);
+  const error = useSelector((state: RootState) => state.shipment.error);
+
+  if (isLoading) {
+    return "loading...";
+  }
+
+  if (error) {
+    return error;
+  }
 
   const mapShipments = () => {
     return shipments.map((shipment) => (
