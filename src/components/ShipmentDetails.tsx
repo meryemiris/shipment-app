@@ -8,35 +8,33 @@ import {
   Box,
 } from "@chakra-ui/react";
 
-const formFields = [
-  { label: "order No", name: "orderNo", defaultValue: "order no" },
-  { label: "date", name: "date", defaultValue: "date" },
-  { label: "customer", name: "customer", defaultValue: "customer" },
-  { label: "trackingNo", name: "trackingNo", defaultValue: "trackingNo" },
-  { label: "consignee", name: "consignee", defaultValue: "consignee" },
-  { label: "status", name: "status", defaultValue: "status" },
-];
+import { useLocation } from "react-router-dom";
 
 interface FormInputProps {
   label: string;
   name: string;
-  defaultValue: string;
+  value: string;
 }
 
-const FormInput: React.FC<FormInputProps> = ({ label, name, defaultValue }) => (
+const FormInput: React.FC<FormInputProps> = ({ label, name, value }) => (
   <FormControl>
     <FormLabel>{label}</FormLabel>
-    <Input
-      size="sm"
-      type="text"
-      name={name}
-      defaultValue={defaultValue}
-      variant="filled"
-    />
+    <Input size="sm" type="text" name={name} value={value} variant="filled" />
   </FormControl>
 );
 
 export default function ShipmentDetails() {
+  const location = useLocation();
+  const { shipment } = location.state;
+
+  const formFields = [
+    { label: "order No", name: "orderNo", value: shipment.orderNo },
+    { label: "date", name: "date", value: shipment.date },
+    { label: "customer", name: "customer", value: shipment.customer },
+    { label: "trackingNo", name: "trackingNo", value: shipment.trackingNo },
+    { label: "consignee", name: "consignee", value: shipment.consignee },
+    { label: "status", name: "status", value: shipment.status },
+  ];
   return (
     <Box
       maxW="lg"

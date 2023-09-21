@@ -69,6 +69,7 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
                 <ChakraLink
                   as={ReactRouterLink}
                   to={`/details/${shipment.orderNo}`}
+                  state={{ shipment }}
                 >
                   <IconButton
                     aria-label="Show Shipment Details"
