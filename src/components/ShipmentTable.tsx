@@ -14,9 +14,8 @@ import {
   Tr,
   Th,
   Td,
-  TableContainer,
   IconButton,
-  Box,
+  TableContainer,
 } from "@chakra-ui/react";
 
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
@@ -54,7 +53,7 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
         <Td>{shipment.trackingNo}</Td>
         <Td>{shipment.status}</Td>
         <Td>{shipment.consignee}</Td>
-        <Td>
+        <Td pr={1}>
           <ChakraLink
             as={ReactRouterLink}
             to={`/details/${shipment.orderNo}`}
@@ -65,6 +64,8 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
               icon={<EditIcon />}
             />
           </ChakraLink>
+        </Td>
+        <Td pl={1}>
           <IconButton aria-label="Delete Shipment" icon={<DeleteIcon />} />
         </Td>
       </Tr>
@@ -72,23 +73,21 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
   };
 
   return (
-    <Box overflow={"auto"} maxWidth={"100%"}>
-      <TableContainer>
-        <Table size="sm" variant="striped">
-          <Thead>
-            <Tr>
-              <Th>orderNo</Th>
-              <Th>date</Th>
-              <Th>customer</Th>
-              <Th>trackingNo</Th>
-              <Th>status</Th>
-              <Th>consignee</Th>
-            </Tr>
-          </Thead>
-          <Tbody>{mapShipments()}</Tbody>
-        </Table>
-      </TableContainer>
-    </Box>
+    <TableContainer whiteSpace="pre-wrap">
+      <Table maxWidth="100%" variant="striped">
+        <Thead>
+          <Tr>
+            <Th>orderNo</Th>
+            <Th>date</Th>
+            <Th>customer</Th>
+            <Th>trackingNo</Th>
+            <Th>status</Th>
+            <Th>consignee</Th>
+          </Tr>
+        </Thead>
+        <Tbody>{mapShipments()}</Tbody>
+      </Table>
+    </TableContainer>
   );
 };
 
