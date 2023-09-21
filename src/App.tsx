@@ -1,34 +1,21 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
-import { setShipments } from "./store/shipment";
-import { RootState } from "./store/store";
-
-import axios from "axios";
-import ShipmentsTable from "./components/ShipmentTable";
 import ShipmentDetails from "./components/ShipmentDetails";
+import ShipmentTable from "./components/ShipmentTable";
+
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <ShipmentTable shipments={[]} />,
+  },
+  {
+    path: "details/:orderNo",
+    element: <ShipmentDetails />,
+  },
+]);
 
 function App() {
-  const dispatch = useDispatch();
-  const shipments = useSelector((state: RootState) => state.shipment.shipments);
-
-  useEffect(() => {
-    axios
-      .get("../../shipment.txt")
-      .then((response) => {
-        dispatch(setShipments(response.data));
-      })
-      .catch((error) => {
-        console.error("Error loading shipments:", error);
-      });
-  }, [dispatch]);
-
-  return (
-    <>
-      <ShipmentDetails />
-      <ShipmentsTable shipments={shipments} />
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

@@ -1,5 +1,16 @@
 import { Shipment } from "../store/shipment";
 
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { setShipments } from "../store/shipment";
+import { RootState } from "../store/store";
+
+import { Link as ReactRouterLink } from "react-router-dom";
+import { Link as ChakraLink } from "@chakra-ui/react";
+
+import axios from "axios";
+
 import {
   Table,
   Thead,
@@ -17,7 +28,21 @@ interface ShipmentTableProps {
   shipments: Shipment[];
 }
 
-const ShipmentTable: React.FC<ShipmentTableProps> = ({ shipments }) => {
+const ShipmentTable: React.FC<ShipmentTableProps> = () => {
+  const dispatch = useDispatch();
+  const shipments = useSelector((state: RootState) => state.shipment.shipments);
+
+  useEffect(() => {
+    axios
+      .get("../../shipment.txt")
+      .then((response) => {
+        dispatch(setShipments(response.data));
+      })
+      .catch((error) => {
+        console.error("Error loading shipments:", error);
+      });
+  }, [dispatch]);
+
   return (
     <TableContainer>
       <Table size="sm" variant="striped">
@@ -41,12 +66,17 @@ const ShipmentTable: React.FC<ShipmentTableProps> = ({ shipments }) => {
               <Td>{shipment.status}</Td>
               <Td>{shipment.consignee}</Td>
               <Td>
+                <ChakraLink
+                  as={ReactRouterLink}
+                  to={`/details/${shipment.orderNo}`}
+                >
+                  <IconButton
+                    aria-label="Show Shipment Details"
+                    icon={<EditIcon />}
+                  />
+                </ChakraLink>
                 <IconButton
-                  aria-label="Show Shipment Details"
-                  icon={<EditIcon />}
-                />
-                <IconButton
-                  aria-label="Show Shipment Details"
+                  aria-label="Delete Shipment"
                   icon={<DeleteIcon />}
                 />
               </Td>
