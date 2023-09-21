@@ -1,5 +1,5 @@
 import { Shipment } from "../store/shipment";
-import { RootState } from "../store/store";
+import { AppDispatch, RootState } from "../store/store";
 import { fetchShipments } from "../store/shipment";
 
 import { useEffect } from "react";
@@ -26,7 +26,7 @@ interface ShipmentTableProps {
 }
 
 const ShipmentTable: React.FC<ShipmentTableProps> = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   type FetchShipmentsThunk = ReturnType<typeof fetchShipments>;
 
   useEffect(() => {
