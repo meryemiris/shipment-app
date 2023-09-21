@@ -6,6 +6,7 @@ import { RootState } from "./store/store";
 
 import axios from "axios";
 import ShipmentsTable from "./components/ShipmentTable";
+import ShipmentDetails from "./components/ShipmentDetails";
 
 function App() {
   const dispatch = useDispatch();
@@ -22,7 +23,12 @@ function App() {
       });
   }, [dispatch]);
 
-  return <ShipmentsTable shipments={shipments} />;
+  return (
+    <>
+      <ShipmentDetails />
+      <ShipmentsTable shipments={shipments} />
+    </>
+  );
 }
 
 export default App;
