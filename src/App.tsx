@@ -1,11 +1,15 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
 import { setShipments } from "./store/shipment";
+import { RootState } from "./store/store";
 
 import axios from "axios";
+import ShipmentsTable from "./components/ShipmentTable";
 
 function App() {
   const dispatch = useDispatch();
+  const shipments = useSelector((state: RootState) => state.shipment.shipments);
 
   useEffect(() => {
     axios
@@ -18,7 +22,7 @@ function App() {
       });
   }, [dispatch]);
 
-  return <></>;
+  return <ShipmentsTable shipments={shipments} />;
 }
 
 export default App;
