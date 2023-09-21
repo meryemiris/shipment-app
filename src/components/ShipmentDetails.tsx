@@ -1,3 +1,5 @@
+import { useLocation } from "react-router-dom";
+
 import {
   Heading,
   FormControl,
@@ -6,9 +8,8 @@ import {
   Grid,
   GridItem,
   Box,
+  Flex,
 } from "@chakra-ui/react";
-
-import { useLocation } from "react-router-dom";
 
 interface FormInputProps {
   label: string;
@@ -17,9 +18,15 @@ interface FormInputProps {
 }
 
 const FormInput: React.FC<FormInputProps> = ({ label, name, value }) => (
-  <FormControl>
+  <FormControl mb={4}>
     <FormLabel>{label}</FormLabel>
-    <Input size="sm" type="text" name={name} value={value} variant="filled" />
+    <Input
+      size="sm"
+      type="text"
+      name={name}
+      defaultValue={value}
+      variant="filled"
+    />
   </FormControl>
 );
 
@@ -36,25 +43,27 @@ export default function ShipmentDetails() {
     { label: "status", name: "status", value: shipment.status },
   ];
   return (
-    <Box
-      maxW="lg"
-      borderWidth="1px"
-      borderRadius="lg"
-      overflow="hidden"
-      p="6"
-      boxShadow="md"
-    >
-      <Heading color="gray" fontWeight="medium" size="sm" pb="6">
-        SHIPMENT DETAILS
-      </Heading>
+    <Flex minWidth="80vh" flexDirection={"column"}>
+      <Box
+        borderWidth="1px"
+        borderRadius="lg"
+        overflow="hidden"
+        p={6}
+        m={6}
+        boxShadow="md"
+      >
+        <Heading color="gray" fontWeight="medium" size="sm" pb="6">
+          SHIPMENT DETAILS
+        </Heading>
 
-      <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-        {formFields.map((field, index) => (
-          <GridItem colSpan={1} key={index}>
-            <FormInput {...field} />
-          </GridItem>
-        ))}
-      </Grid>
-    </Box>
+        <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+          {formFields.map((field, index) => (
+            <GridItem colSpan={1} key={index}>
+              <FormInput {...field} />
+            </GridItem>
+          ))}
+        </Grid>
+      </Box>
+    </Flex>
   );
 }
