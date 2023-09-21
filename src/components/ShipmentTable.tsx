@@ -18,6 +18,7 @@ import {
   Td,
   TableContainer,
   IconButton,
+  Box,
 } from "@chakra-ui/react";
 
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
@@ -39,48 +40,48 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
 
   const mapShipments = () => {
     return shipments.map((shipment) => (
-      <Tbody key={shipment.orderNo}>
-        <Tr>
-          <Td>{shipment.orderNo}</Td>
-          <Td>{shipment.date}</Td>
-          <Td>{shipment.customer}</Td>
-          <Td>{shipment.trackingNo}</Td>
-          <Td>{shipment.status}</Td>
-          <Td>{shipment.consignee}</Td>
-          <Td>
-            <ChakraLink
-              as={ReactRouterLink}
-              to={`/details/${shipment.orderNo}`}
-              state={{ shipment }}
-            >
-              <IconButton
-                aria-label="Show Shipment Details"
-                icon={<EditIcon />}
-              />
-            </ChakraLink>
-            <IconButton aria-label="Delete Shipment" icon={<DeleteIcon />} />
-          </Td>
-        </Tr>
-      </Tbody>
+      <Tr key={shipment.orderNo}>
+        <Td>{shipment.orderNo}</Td>
+        <Td>{shipment.date}</Td>
+        <Td>{shipment.customer}</Td>
+        <Td>{shipment.trackingNo}</Td>
+        <Td>{shipment.status}</Td>
+        <Td>{shipment.consignee}</Td>
+        <Td>
+          <ChakraLink
+            as={ReactRouterLink}
+            to={`/details/${shipment.orderNo}`}
+            state={{ shipment }}
+          >
+            <IconButton
+              aria-label="Show Shipment Details"
+              icon={<EditIcon />}
+            />
+          </ChakraLink>
+          <IconButton aria-label="Delete Shipment" icon={<DeleteIcon />} />
+        </Td>
+      </Tr>
     ));
   };
 
   return (
-    <TableContainer>
-      <Table size="sm" variant="striped">
-        <Thead>
-          <Tr>
-            <Th>orderNo</Th>
-            <Th>date</Th>
-            <Th>customer</Th>
-            <Th>trackingNo</Th>
-            <Th>status</Th>
-            <Th>consignee</Th>
-          </Tr>
-        </Thead>
-        {mapShipments()}
-      </Table>
-    </TableContainer>
+    <Box overflow={"auto"} maxWidth={"100%"}>
+      <TableContainer>
+        <Table size="sm" variant="striped">
+          <Thead>
+            <Tr>
+              <Th>orderNo</Th>
+              <Th>date</Th>
+              <Th>customer</Th>
+              <Th>trackingNo</Th>
+              <Th>status</Th>
+              <Th>consignee</Th>
+            </Tr>
+          </Thead>
+          <Tbody>{mapShipments()}</Tbody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };
 
