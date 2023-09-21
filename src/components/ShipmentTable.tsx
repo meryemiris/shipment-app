@@ -8,8 +8,10 @@ import {
   Th,
   Td,
   TableContainer,
-  Button,
+  IconButton,
 } from "@chakra-ui/react";
+
+import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 
 interface ShipmentTableProps {
   shipments: Shipment[];
@@ -39,8 +41,14 @@ const ShipmentTable: React.FC<ShipmentTableProps> = ({ shipments }) => {
               <Td>{shipment.status}</Td>
               <Td>{shipment.consignee}</Td>
               <Td>
-                <Button>Edit</Button>
-                <Button>Del</Button>
+                <IconButton
+                  aria-label="Show Shipment Details"
+                  icon={<EditIcon />}
+                />
+                <IconButton
+                  aria-label="Show Shipment Details"
+                  icon={<DeleteIcon />}
+                />
               </Td>
             </Tr>
           </Tbody>
