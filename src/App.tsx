@@ -13,7 +13,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get("https://my.api.mockaroo.com/shipments.json?key=5e0b62d0")
+      .get("../../shipment.txt")
       .then((response) => {
         dispatch(setShipments(response.data));
       })
