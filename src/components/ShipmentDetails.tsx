@@ -14,6 +14,7 @@ import {
   GridItem,
   Box,
   Flex,
+  Spinner,
 } from "@chakra-ui/react";
 
 interface FormInputProps {
@@ -56,7 +57,16 @@ const ShipmentDetails: React.FC = () => {
   }, [shipmentStatus, dispatch]);
 
   if (shipmentStatus === "loading") {
-    return "loading...";
+    return (
+      <Flex alignItems={"center"} justifyContent={"center"} mb={6}>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          size="xl"
+        />
+      </Flex>
+    );
   }
 
   if (shipmentStatus === "failed") {
@@ -101,7 +111,7 @@ const ShipmentDetails: React.FC = () => {
             ))}
           </Grid>
         ) : (
-          <div>Loading...</div>
+          <p>some error message</p>
         )}
       </Box>
     </Flex>

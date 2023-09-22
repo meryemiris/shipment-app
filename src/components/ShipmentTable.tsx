@@ -16,6 +16,8 @@ import {
   Td,
   IconButton,
   TableContainer,
+  Spinner,
+  Flex,
 } from "@chakra-ui/react";
 
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
@@ -44,7 +46,16 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
   );
 
   if (shipmentStatus === "loading") {
-    return "loading...";
+    return (
+      <Flex alignItems={"center"} justifyContent={"center"} mt={6}>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          size="xl"
+        />
+      </Flex>
+    );
   }
 
   if (shipmentStatus === "failed") {
