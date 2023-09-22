@@ -28,23 +28,26 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
   const dispatch = useDispatch<AppDispatch>();
   type FetchShipmentsThunk = ReturnType<typeof fetchShipments>;
 
+  const shipmentStatus = useSelector(
+    (state: RootState) => state.shipments.status
+  );
+  const error = useSelector((state: RootState) => state.shipments.error);
+
   useEffect(() => {
-    dispatch(fetchShipments() as FetchShipmentsThunk);
-  }, [dispatch]);
+    if (shipmentStatus === "idle") {
+      dispatch(fetchShipments() as FetchShipmentsThunk);
+    }
+  }, [shipmentStatus, dispatch]);
 
   const shipments = useSelector(
     (state: RootState) => state.shipments.shipments
   );
-  const isLoading = useSelector(
-    (state: RootState) => state.shipments.isLoading
-  );
-  const error = useSelector((state: RootState) => state.shipments.error);
 
-  if (isLoading) {
+  if (shipmentStatus === "loading") {
     return "loading...";
   }
 
-  if (error) {
+  if (shipmentStatus === "failed") {
     return error;
   }
 

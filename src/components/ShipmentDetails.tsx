@@ -1,5 +1,10 @@
 import { useParams } from "react-router-dom";
-import { RootState } from "../store/store";
+import { AppDispatch, RootState } from "../store/store";
+import { fetchShipments } from "../store/shipment";
+
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import {
   Heading,
   FormControl,
@@ -10,7 +15,6 @@ import {
   Box,
   Flex,
 } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
 
 interface FormInputProps {
   label: string;
@@ -32,14 +36,32 @@ const FormInput: React.FC<FormInputProps> = ({ label, name, value }) => (
 );
 
 const ShipmentDetails: React.FC = () => {
-  useEffect(() => {
-    dispatch(fetchShipmentByOrderNo(orderNo));
-  }, [dispatch, orderNo]);
+  const dispatch = useDispatch<AppDispatch>();
+  type FetchShipmentsThunk = ReturnType<typeof fetchShipments>;
+
+  const shipmentStatus = useSelector(
+    (state: RootState) => state.shipments.status
+  );
+  const error = useSelector((state: RootState) => state.shipments.error);
 
   const { orderNo } = useParams<{ orderNo: string }>();
   const shipment = useSelector((state: RootState) =>
     state.shipments.shipments.find((s) => s.orderNo === orderNo)
   );
+
+  useEffect(() => {
+    if (shipmentStatus === "idle") {
+      dispatch(fetchShipments() as FetchShipmentsThunk);
+    }
+  }, [shipmentStatus, dispatch]);
+
+  if (shipmentStatus === "loading") {
+    return "loading...";
+  }
+
+  if (shipmentStatus === "failed") {
+    return error;
+  }
 
   return (
     <Flex minWidth="80vh" flexDirection={"column"}>

@@ -13,14 +13,14 @@ export interface Shipment {
 export interface ShipmentState {
   shipments: Shipment[];
   selectedShipment: Shipment | null;
-  isLoading: boolean;
+  status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null | undefined;
 }
 
 const initialState: ShipmentState = {
   shipments: [],
   selectedShipment: null,
-  isLoading: false,
+  status: "idle",
   error: null,
 };
 
@@ -38,14 +38,14 @@ export const shipmentsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchShipments.pending, (state) => {
-      state.isLoading = true;
+      state.status = "loading";
     });
     builder.addCase(fetchShipments.fulfilled, (state, action) => {
-      state.isLoading = false;
+      state.status = "succeeded";
       state.shipments = action.payload;
     });
     builder.addCase(fetchShipments.rejected, (state, action) => {
-      state.isLoading = false;
+      state.status = "failed";
       state.error = action.error.message;
     });
   },
