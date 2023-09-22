@@ -67,13 +67,18 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
             state={{ shipment }}
           >
             <IconButton
+              background="none"
               aria-label="Show Shipment Details"
               icon={<EditIcon />}
             />
           </ChakraLink>
         </Td>
         <Td pl={1}>
-          <IconButton aria-label="Delete Shipment" icon={<DeleteIcon />} />
+          <IconButton
+            background="none"
+            aria-label="Delete Shipment"
+            icon={<DeleteIcon />}
+          />
         </Td>
       </Tr>
     ));
