@@ -1,6 +1,6 @@
 import { Shipment } from "../store/shipment";
 import { AppDispatch, RootState } from "../store/store";
-import { fetchShipments } from "../store/shipment";
+import { fetchShipments, actions } from "../store/shipment";
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -62,6 +62,10 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
     return error;
   }
 
+  function handleRemoveShipment(orderNo: string) {
+    dispatch(actions.removeShipment(orderNo));
+  }
+
   const mapShipments = () => {
     return shipments.map((shipment) => (
       <Tr key={shipment.orderNo}>
@@ -86,6 +90,7 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
         </Td>
         <Td pl={1}>
           <IconButton
+            onClick={() => handleRemoveShipment(shipment.orderNo)}
             background="none"
             aria-label="Delete Shipment"
             icon={<DeleteIcon />}
