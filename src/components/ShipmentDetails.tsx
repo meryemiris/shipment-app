@@ -4,6 +4,7 @@ import { fetchShipments } from "../store/shipment";
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link as ReactRouterLink } from "react-router-dom";
 
 import {
   Heading,
@@ -15,7 +16,11 @@ import {
   Box,
   Flex,
   Spinner,
+  Link as ChakraLink,
+  Button,
 } from "@chakra-ui/react";
+
+import { ArrowBackIcon } from "@chakra-ui/icons";
 
 interface FormInputProps {
   label: string;
@@ -113,6 +118,19 @@ const ShipmentDetails: React.FC = () => {
         ) : (
           <p>some error message</p>
         )}
+
+        <ChakraLink as={ReactRouterLink} to={`/`}>
+          <Button
+            mt={10}
+            size={"sm"}
+            color={"gray.500"}
+            leftIcon={<ArrowBackIcon />}
+            variant="ghost"
+            aria-label="Back to All Shipments"
+          >
+            Back to All
+          </Button>
+        </ChakraLink>
       </Box>
     </Flex>
   );
