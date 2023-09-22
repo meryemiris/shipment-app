@@ -42,7 +42,7 @@ export const shipmentsSlice = createSlice({
     });
     builder.addCase(fetchShipments.fulfilled, (state, action) => {
       state.status = "succeeded";
-      state.shipments = action.payload;
+      state.shipments = state.shipments.concat(action.payload);
     });
     builder.addCase(fetchShipments.rejected, (state, action) => {
       state.status = "failed";
