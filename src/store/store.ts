@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import shipmentReducer from "./shipment";
+import shipmentsReducer from "./shipment";
 
 const store = configureStore({
   reducer: {
-    shipment: shipmentReducer,
+    shipments: shipmentsReducer,
   },
 });
 

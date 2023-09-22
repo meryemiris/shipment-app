@@ -32,9 +32,13 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
     dispatch(fetchShipments() as FetchShipmentsThunk);
   }, [dispatch]);
 
-  const shipments = useSelector((state: RootState) => state.shipment.shipments);
-  const isLoading = useSelector((state: RootState) => state.shipment.isLoading);
-  const error = useSelector((state: RootState) => state.shipment.error);
+  const shipments = useSelector(
+    (state: RootState) => state.shipments.shipments
+  );
+  const isLoading = useSelector(
+    (state: RootState) => state.shipments.isLoading
+  );
+  const error = useSelector((state: RootState) => state.shipments.error);
 
   if (isLoading) {
     return "loading...";

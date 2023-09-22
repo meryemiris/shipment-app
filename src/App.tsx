@@ -9,7 +9,7 @@ const router = createBrowserRouter([
     element: <ShipmentTable shipments={[]} />,
   },
   {
-    path: "details/:orderNo",
+    path: "/details/:orderNo",
     element: <ShipmentDetails />,
   },
 ]);
