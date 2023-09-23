@@ -84,7 +84,7 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
             <IconButton
               background="none"
               aria-label="Show Shipment Details"
-              icon={<EditIcon />}
+              icon={<EditIcon color={"blue.500"} />}
             />
           </ChakraLink>
         </Td>
@@ -93,7 +93,7 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
             onClick={() => handleRemoveShipment(shipment.orderNo)}
             background="none"
             aria-label="Delete Shipment"
-            icon={<DeleteIcon />}
+            icon={<DeleteIcon color={"red.500"} />}
           />
         </Td>
       </Tr>
