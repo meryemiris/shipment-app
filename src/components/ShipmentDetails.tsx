@@ -8,12 +8,10 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 import { Shipment } from "../store/shipment";
+import FormInput from "./FormInput";
 
 import {
   Heading,
-  FormControl,
-  FormLabel,
-  Input,
   Grid,
   GridItem,
   Box,
@@ -21,66 +19,16 @@ import {
   Spinner,
   Link as ChakraLink,
   Button,
-  Select,
 } from "@chakra-ui/react";
 
 import { ArrowBackIcon } from "@chakra-ui/icons";
 
-interface FormInputProps {
-  label: string;
-  name: string;
-  value: string;
-  isSelect: boolean;
-  onChange: (
-    e:
-      | React.ChangeEvent<HTMLSelectElement>
-      | React.ChangeEvent<HTMLInputElement>
-  ) => void;
-}
-
-const FormInput: React.FC<FormInputProps> = ({
-  label,
-  name,
-  value,
-  isSelect,
-  onChange,
-}) => (
-  <FormControl mb={4}>
-    <FormLabel>{label}</FormLabel>
-    {isSelect ? (
-      <Select
-        size="sm"
-        name={name}
-        placeholder={value}
-        variant="filled"
-        onChange={(e) => onChange(e)}
-      >
-        {selectOptions.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.statusName}
-          </option>
-        ))}
-      </Select>
-    ) : (
-      <Input
-        size="sm"
-        type="text"
-        name={name}
-        defaultValue={value}
-        variant="filled"
-        onChange={(e) => onChange(e)}
-      />
-    )}
-  </FormControl>
-);
-
-const selectOptions = [
-  { statusName: "'Shipped'", value: "'Shipped'" },
-  { statusName: "'Delivered'", value: "'Delivered'" },
-  { statusName: "'In Transit'", value: "'In Transit'" },
-];
-
 const ShipmentDetails: React.FC = () => {
+  const selectOptions = [
+    { statusName: "'Shipped'", value: "'Shipped'" },
+    { statusName: "'Delivered'", value: "'Delivered'" },
+    { statusName: "'In Transit'", value: "'In Transit'" },
+  ];
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   type FetchShipmentsThunk = ReturnType<typeof fetchShipments>;
@@ -196,6 +144,7 @@ const ShipmentDetails: React.FC = () => {
                       e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
                     ) => handleFieldChange(field.name, e.target.value)}
                     isSelect={field.name === "status"}
+                    selectOptions={selectOptions}
                   />
                 </GridItem>
               ))}
