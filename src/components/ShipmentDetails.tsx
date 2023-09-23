@@ -120,17 +120,16 @@ const ShipmentDetails: React.FC = () => {
         borderWidth="1px"
         borderRadius="lg"
         overflow="hidden"
-        p={6}
-        m={6}
-        boxShadow="md"
+        p={5}
+        m={3}
+        boxShadow="sm"
       >
-        <Heading color="gray" fontWeight="medium" size="sm" pb="6">
+        <Heading as="h2" color="gray.600" fontWeight="medium" size="sm" pb="6">
           SHIPMENT DETAILS
         </Heading>
 
         {existingShipment ? (
           <form onSubmit={handleUpdateShipment}>
-            {" "}
             <Grid templateColumns="repeat(2, 1fr)" gap={4}>
               {[
                 {
@@ -169,8 +168,12 @@ const ShipmentDetails: React.FC = () => {
                   />
                 </GridItem>
               ))}
-              <Button type="submit">Save</Button>
             </Grid>
+            <Flex mt={5} justifyContent={"flex-end"}>
+              <Button colorScheme="teal" type="submit">
+                Save Changes
+              </Button>
+            </Flex>
           </form>
         ) : (
           <p>some error message</p>
@@ -178,11 +181,10 @@ const ShipmentDetails: React.FC = () => {
 
         <ChakraLink as={ReactRouterLink} to={`/`}>
           <Button
-            mt={10}
             size={"sm"}
             color={"gray.500"}
             leftIcon={<ArrowBackIcon />}
-            variant="ghost"
+            variant="outline"
             aria-label="Back to All Shipments"
           >
             Back to All
