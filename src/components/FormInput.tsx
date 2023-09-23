@@ -10,7 +10,7 @@ interface FormInputProps {
       | React.ChangeEvent<HTMLSelectElement>
       | React.ChangeEvent<HTMLInputElement>
   ) => void;
-  selectOptions: { statusName: string; value: string }[];
+  selectOptions: { statusName: string; value: string }[] | undefined;
 }
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -31,11 +31,12 @@ const FormInput: React.FC<FormInputProps> = ({
         variant="filled"
         onChange={(e) => onChange(e)}
       >
-        {selectOptions.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.statusName}
-          </option>
-        ))}
+        {selectOptions &&
+          selectOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.statusName}
+            </option>
+          ))}
       </Select>
     ) : (
       <Input

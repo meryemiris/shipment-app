@@ -8,6 +8,7 @@ export interface Shipment {
   trackingNo: string;
   status: "Shipped" | "Delivered" | "In Transit";
   consignee: string;
+  [key: string]: string;
 }
 
 export interface ShipmentState {

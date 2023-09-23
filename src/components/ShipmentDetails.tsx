@@ -1,15 +1,15 @@
-import { useParams } from "react-router-dom";
-import { AppDispatch, RootState } from "../store/store";
-import { actions, fetchShipments } from "../store/shipment";
-
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link as ReactRouterLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import {
+  useParams,
+  Link as ReactRouterLink,
+  useNavigate,
+} from "react-router-dom";
 
-import { Shipment } from "../store/shipment";
-import FormInput from "./FormInput";
+import { AppDispatch, RootState } from "../store/store";
+import { actions, fetchShipments, Shipment } from "../store/shipment";
 
+import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
   Heading,
   Grid,
@@ -21,23 +21,15 @@ import {
   Button,
 } from "@chakra-ui/react";
 
-import { ArrowBackIcon } from "@chakra-ui/icons";
+import FormInput from "./FormInput";
 
 const ShipmentDetails: React.FC = () => {
-  const selectOptions = [
-    { statusName: "'Shipped'", value: "'Shipped'" },
-    { statusName: "'Delivered'", value: "'Delivered'" },
-    { statusName: "'In Transit'", value: "'In Transit'" },
-  ];
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  type FetchShipmentsThunk = ReturnType<typeof fetchShipments>;
 
-  const shipmentStatus = useSelector(
-    (state: RootState) => state.shipments.dataStatus
+  const { dataStatus: loadingStatus, error: loadingError } = useSelector(
+    (state: RootState) => state.shipments
   );
-
-  const error = useSelector((state: RootState) => state.shipments.error);
 
   const { orderNo } = useParams<{ orderNo: string }>();
 
@@ -49,21 +41,15 @@ const ShipmentDetails: React.FC = () => {
     existingShipment
   );
 
-  const handleFieldChange = (fieldName: string, value: string) => {
-    setShipment((prevShipment) => ({
-      ...prevShipment!,
-      [fieldName]: value,
-    }));
-    console.log(shipment);
-  };
+  type FetchShipmentsThunk = ReturnType<typeof fetchShipments>;
 
   useEffect(() => {
-    if (shipmentStatus === "idle") {
+    if (loadingStatus === "idle") {
       dispatch(fetchShipments() as FetchShipmentsThunk);
     }
-  }, [shipmentStatus, dispatch]);
+  }, [loadingStatus, dispatch]);
 
-  if (shipmentStatus === "loading") {
+  if (loadingStatus === "loading") {
     return (
       <Flex alignItems={"center"} justifyContent={"center"} mb={6}>
         <Spinner
@@ -75,10 +61,16 @@ const ShipmentDetails: React.FC = () => {
       </Flex>
     );
   }
+  if (loadingStatus === "failed") {
+    return loadingError;
+  } // add error message
 
-  if (shipmentStatus === "failed") {
-    return error;
-  }
+  const handleFieldChange = (fieldName: string, value: string) => {
+    setShipment((prevShipment) => ({
+      ...prevShipment!,
+      [fieldName]: value,
+    }));
+  };
 
   function handleUpdateShipment(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -89,6 +81,33 @@ const ShipmentDetails: React.FC = () => {
     );
     navigate("/");
   }
+
+  const selectOptions = [
+    { statusName: "'Shipped'", value: "'Shipped'" },
+    { statusName: "'Delivered'", value: "'Delivered'" },
+    { statusName: "'In Transit'", value: "'In Transit'" },
+  ];
+
+  interface FormField {
+    label: string;
+    name: string;
+    isSelect: boolean;
+    selectOptions?: { statusName: string; value: string }[];
+  }
+
+  const formFields: FormField[] = [
+    { label: "order No", name: "orderNo", isSelect: false },
+    { label: "date", name: "date", isSelect: false },
+    { label: "customer", name: "customer", isSelect: false },
+    { label: "trackingNo", name: "trackingNo", isSelect: false },
+    { label: "consignee", name: "consignee", isSelect: false },
+    {
+      label: "status",
+      name: "status",
+      isSelect: true,
+      selectOptions,
+    },
+  ];
 
   return (
     <Flex minWidth="80vh" flexDirection={"column"}>
@@ -107,44 +126,17 @@ const ShipmentDetails: React.FC = () => {
         {existingShipment ? (
           <form onSubmit={handleUpdateShipment}>
             <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-              {[
-                {
-                  label: "order No",
-                  name: "orderNo",
-                  value: existingShipment.orderNo,
-                },
-                { label: "date", name: "date", value: existingShipment.date },
-                {
-                  label: "customer",
-                  name: "customer",
-                  value: existingShipment.customer,
-                },
-                {
-                  label: "trackingNo",
-                  name: "trackingNo",
-                  value: existingShipment.trackingNo,
-                },
-                {
-                  label: "consignee",
-                  name: "consignee",
-                  value: existingShipment.consignee,
-                },
-                {
-                  label: "status",
-                  name: "status",
-                  value: existingShipment.status,
-                  isSelect: true,
-                  selectOptions: selectOptions,
-                },
-              ].map((field, index) => (
+              {formFields.map((field, index) => (
                 <GridItem colSpan={1} key={index}>
                   <FormInput
-                    {...field}
-                    onChange={(
-                      e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-                    ) => handleFieldChange(field.name, e.target.value)}
-                    isSelect={field.name === "status"}
-                    selectOptions={selectOptions}
+                    label={field.label}
+                    name={field.name}
+                    value={existingShipment[field.name]}
+                    onChange={(e) =>
+                      handleFieldChange(field.name, e.target.value)
+                    }
+                    isSelect={field.isSelect}
+                    selectOptions={field.selectOptions}
                   />
                 </GridItem>
               ))}
@@ -157,6 +149,7 @@ const ShipmentDetails: React.FC = () => {
           </form>
         ) : (
           <p>some error message</p>
+          //add error message
         )}
 
         <ChakraLink as={ReactRouterLink} to={`/`}>
