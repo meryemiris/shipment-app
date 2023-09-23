@@ -5,6 +5,7 @@ interface FormInputProps {
   name: string;
   value: string;
   isSelect: boolean;
+  isReadOnly: boolean;
   onChange: (
     e:
       | React.ChangeEvent<HTMLSelectElement>
@@ -18,6 +19,7 @@ const FormInput: React.FC<FormInputProps> = ({
   name,
   value,
   isSelect,
+  isReadOnly,
   onChange,
   selectOptions,
 }) => (
@@ -46,6 +48,7 @@ const FormInput: React.FC<FormInputProps> = ({
         defaultValue={value}
         variant="filled"
         onChange={(e) => onChange(e)}
+        readOnly={isReadOnly}
       />
     )}
   </FormControl>

@@ -92,20 +92,32 @@ const ShipmentDetails: React.FC = () => {
     label: string;
     name: string;
     isSelect: boolean;
+    isReadOnly: boolean;
     selectOptions?: { statusName: string; value: string }[];
   }
 
   const formFields: FormField[] = [
-    { label: "order No", name: "orderNo", isSelect: false },
-    { label: "date", name: "date", isSelect: false },
-    { label: "customer", name: "customer", isSelect: false },
-    { label: "trackingNo", name: "trackingNo", isSelect: false },
-    { label: "consignee", name: "consignee", isSelect: false },
+    { label: "order No", name: "orderNo", isSelect: false, isReadOnly: true },
+    { label: "date", name: "date", isSelect: false, isReadOnly: false },
+    { label: "customer", name: "customer", isSelect: false, isReadOnly: false },
+    {
+      label: "trackingNo",
+      name: "trackingNo",
+      isSelect: false,
+      isReadOnly: false,
+    },
+    {
+      label: "consignee",
+      name: "consignee",
+      isSelect: false,
+      isReadOnly: false,
+    },
     {
       label: "status",
       name: "status",
       isSelect: true,
       selectOptions,
+      isReadOnly: false,
     },
   ];
 
@@ -136,6 +148,7 @@ const ShipmentDetails: React.FC = () => {
                       handleFieldChange(field.name, e.target.value)
                     }
                     isSelect={field.isSelect}
+                    isReadOnly={field.isReadOnly}
                     selectOptions={field.selectOptions}
                   />
                 </GridItem>
