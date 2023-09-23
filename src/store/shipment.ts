@@ -6,21 +6,21 @@ export interface Shipment {
   date: string;
   customer: string;
   trackingNo: string;
-  status: string;
+  status: "Shipped" | "Delivered" | "In Transit";
   consignee: string;
 }
 
 export interface ShipmentState {
   shipments: Shipment[];
   selectedShipment: Shipment | null;
-  status: "idle" | "loading" | "succeeded" | "failed";
+  dataStatus: "idle" | "loading" | "succeeded" | "failed";
   error: string | null | undefined;
 }
 
 const initialState: ShipmentState = {
   shipments: [],
   selectedShipment: null,
-  status: "idle",
+  dataStatus: "idle",
   error: null,
 };
 
@@ -62,14 +62,14 @@ export const shipmentsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchShipments.pending, (state) => {
-      state.status = "loading";
+      state.dataStatus = "loading";
     });
     builder.addCase(fetchShipments.fulfilled, (state, action) => {
-      state.status = "succeeded";
+      state.dataStatus = "succeeded";
       state.shipments = state.shipments.concat(action.payload);
     });
     builder.addCase(fetchShipments.rejected, (state, action) => {
-      state.status = "failed";
+      state.dataStatus = "failed";
       state.error = action.error.message;
     });
   },

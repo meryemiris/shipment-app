@@ -31,7 +31,7 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
   type FetchShipmentsThunk = ReturnType<typeof fetchShipments>;
 
   const shipmentStatus = useSelector(
-    (state: RootState) => state.shipments.status
+    (state: RootState) => state.shipments.dataStatus
   );
   const error = useSelector((state: RootState) => state.shipments.error);
 
