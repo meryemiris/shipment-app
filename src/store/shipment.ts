@@ -45,6 +45,20 @@ export const shipmentsSlice = createSlice({
         (shipment) => shipment.orderNo !== orderNo
       );
     },
+    updateShipment(state, action) {
+      const { orderNo, date, customer, trackingNo, status, consignee } =
+        action.payload;
+      const existingShipment = state.shipments.find(
+        (shipment) => shipment.orderNo === orderNo
+      );
+      if (existingShipment) {
+        existingShipment.date = date;
+        existingShipment.customer = customer;
+        existingShipment.trackingNo = trackingNo;
+        existingShipment.status = status;
+        existingShipment.consignee = consignee;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchShipments.pending, (state) => {

@@ -67,8 +67,8 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
   }
 
   const mapShipments = () => {
-    return shipments.map((shipment) => (
-      <Tr key={shipment.orderNo}>
+    return shipments.map((shipment, index) => (
+      <Tr key={index}>
         <Td>{shipment.orderNo}</Td>
         <Td>{shipment.date}</Td>
         <Td>{shipment.customer}</Td>

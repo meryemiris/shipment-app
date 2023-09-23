@@ -1,10 +1,13 @@
 import { useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../store/store";
-import { fetchShipments } from "../store/shipment";
+import { actions, fetchShipments } from "../store/shipment";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as ReactRouterLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import { Shipment } from "../store/shipment";
 
 import {
   Heading,
@@ -26,9 +29,16 @@ interface FormInputProps {
   label: string;
   name: string;
   value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const FormInput: React.FC<FormInputProps> = ({ label, name, value }) => (
+const FormInput: React.FC<FormInputProps> = ({
+  label,
+  name,
+  value,
+
+  onChange,
+}) => (
   <FormControl mb={4}>
     <FormLabel>{label}</FormLabel>
     <Input
@@ -37,23 +47,38 @@ const FormInput: React.FC<FormInputProps> = ({ label, name, value }) => (
       name={name}
       defaultValue={value}
       variant="filled"
+      onChange={onChange}
     />
   </FormControl>
 );
 
 const ShipmentDetails: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   type FetchShipmentsThunk = ReturnType<typeof fetchShipments>;
 
   const shipmentStatus = useSelector(
     (state: RootState) => state.shipments.status
   );
+
   const error = useSelector((state: RootState) => state.shipments.error);
 
   const { orderNo } = useParams<{ orderNo: string }>();
-  const shipment = useSelector((state: RootState) =>
+
+  const existingShipment = useSelector((state: RootState) =>
     state.shipments.shipments.find((s) => s.orderNo === orderNo)
   );
+
+  const [shipment, setShipment] = useState<Shipment | undefined>(
+    existingShipment
+  );
+
+  const handleFieldChange = (fieldName: string, value: string) => {
+    setShipment((prevShipment) => ({
+      ...prevShipment!,
+      [fieldName]: value,
+    }));
+  };
 
   useEffect(() => {
     if (shipmentStatus === "idle") {
@@ -78,6 +103,15 @@ const ShipmentDetails: React.FC = () => {
     return error;
   }
 
+  function handleUpdateShipment() {
+    dispatch(
+      actions.updateShipment({
+        ...shipment,
+      })
+    );
+    navigate("/");
+  }
+
   return (
     <Flex minWidth="80vh" flexDirection={"column"}>
       <Box
@@ -92,28 +126,46 @@ const ShipmentDetails: React.FC = () => {
           SHIPMENT DETAILS
         </Heading>
 
-        {shipment ? (
+        {existingShipment ? (
           <Grid templateColumns="repeat(2, 1fr)" gap={4}>
             {[
-              { label: "order No", name: "orderNo", value: shipment.orderNo },
-              { label: "date", name: "date", value: shipment.date },
-              { label: "customer", name: "customer", value: shipment.customer },
+              {
+                label: "order No",
+                name: "orderNo",
+                value: existingShipment.orderNo,
+              },
+              { label: "date", name: "date", value: existingShipment.date },
+              {
+                label: "customer",
+                name: "customer",
+                value: existingShipment.customer,
+              },
               {
                 label: "trackingNo",
                 name: "trackingNo",
-                value: shipment.trackingNo,
+                value: existingShipment.trackingNo,
               },
               {
                 label: "consignee",
                 name: "consignee",
-                value: shipment.consignee,
+                value: existingShipment.consignee,
               },
-              { label: "status", name: "status", value: shipment.status },
+              {
+                label: "status",
+                name: "status",
+                value: existingShipment.status,
+              },
             ].map((field, index) => (
               <GridItem colSpan={1} key={index}>
-                <FormInput {...field} />
+                <FormInput
+                  {...field}
+                  onChange={(e) =>
+                    handleFieldChange(field.name, e.target.value)
+                  }
+                />
               </GridItem>
             ))}
+            <Button onClick={handleUpdateShipment}>Save</Button>
           </Grid>
         ) : (
           <p>some error message</p>
