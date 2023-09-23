@@ -29,7 +29,7 @@ const initialState: ShipmentState = {
 export const fetchShipments = createAsyncThunk(
   "shipment/fetchShipments",
   async () => {
-    const response = await axios.get("../../shipment.txt");
+    const response = await axios.get("/shipment.json");
 
     return response.data;
   }
@@ -66,7 +66,7 @@ export const shipmentsSlice = createSlice({
     });
     builder.addCase(fetchShipments.fulfilled, (state, action) => {
       state.dataStatus = "succeeded";
-      state.shipments = state.shipments.concat(action.payload);
+      state.shipments = action.payload;
     });
     builder.addCase(fetchShipments.rejected, (state, action) => {
       state.dataStatus = "failed";
