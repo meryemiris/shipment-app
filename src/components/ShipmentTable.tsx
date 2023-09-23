@@ -1,12 +1,12 @@
-import { Shipment } from "../store/shipment";
+import { useEffect } from "react";
+import { Link as ReactRouterLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 import { AppDispatch, RootState } from "../store/store";
 import { fetchShipments, actions } from "../store/shipment";
 
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link as ReactRouterLink } from "react-router-dom";
+import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { Link as ChakraLink } from "@chakra-ui/react";
-
 import {
   Table,
   Thead,
@@ -20,32 +20,22 @@ import {
   Flex,
 } from "@chakra-ui/react";
 
-import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
-
-interface ShipmentTableProps {
-  shipments: Shipment[];
-}
-
-const ShipmentTable: React.FC<ShipmentTableProps> = () => {
+export default function ShipmentTable() {
   const dispatch = useDispatch<AppDispatch>();
-  type FetchShipmentsThunk = ReturnType<typeof fetchShipments>;
 
-  const shipmentStatus = useSelector(
-    (state: RootState) => state.shipments.dataStatus
-  );
-  const error = useSelector((state: RootState) => state.shipments.error);
+  const {
+    dataStatus: loadingStatus,
+    error: loadingError,
+    shipments: shipments,
+  } = useSelector((state: RootState) => state.shipments);
 
   useEffect(() => {
-    if (shipmentStatus === "idle") {
-      dispatch(fetchShipments() as FetchShipmentsThunk);
+    if (loadingStatus === "idle") {
+      dispatch(fetchShipments());
     }
-  }, [shipmentStatus, dispatch]);
+  }, [loadingStatus, dispatch]);
 
-  const shipments = useSelector(
-    (state: RootState) => state.shipments.shipments
-  );
-
-  if (shipmentStatus === "loading") {
+  if (loadingStatus === "loading") {
     return (
       <Flex alignItems={"center"} justifyContent={"center"} mt={6}>
         <Spinner
@@ -58,8 +48,9 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
     );
   }
 
-  if (shipmentStatus === "failed") {
-    return error;
+  if (loadingStatus === "failed") {
+    return loadingError;
+    //add error message
   }
 
   function handleRemoveShipment(orderNo: string) {
@@ -76,11 +67,7 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
         <Td>{shipment.status}</Td>
         <Td>{shipment.consignee}</Td>
         <Td pr={1}>
-          <ChakraLink
-            as={ReactRouterLink}
-            to={`/details/${shipment.orderNo}`}
-            state={{ shipment }}
-          >
+          <ChakraLink as={ReactRouterLink} to={`/details/${shipment.orderNo}`}>
             <IconButton
               background="none"
               aria-label="Show Shipment Details"
@@ -100,23 +87,27 @@ const ShipmentTable: React.FC<ShipmentTableProps> = () => {
     ));
   };
 
+  const shipmentHeadings = [
+    "orderNo",
+    "date",
+    "customer",
+    "trackingNo",
+    "status",
+    "consignee",
+  ];
+
   return (
     <TableContainer whiteSpace="pre-wrap">
       <Table maxWidth="100%" variant="striped">
         <Thead>
           <Tr>
-            <Th>orderNo</Th>
-            <Th>date</Th>
-            <Th>customer</Th>
-            <Th>trackingNo</Th>
-            <Th>status</Th>
-            <Th>consignee</Th>
+            {shipmentHeadings.map((h) => (
+              <Th>{h}</Th>
+            ))}
           </Tr>
         </Thead>
         <Tbody>{mapShipments()}</Tbody>
       </Table>
     </TableContainer>
   );
-};
-
-export default ShipmentTable;
+}

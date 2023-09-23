@@ -41,11 +41,9 @@ const ShipmentDetails: React.FC = () => {
     existingShipment
   );
 
-  type FetchShipmentsThunk = ReturnType<typeof fetchShipments>;
-
   useEffect(() => {
     if (loadingStatus === "idle") {
-      dispatch(fetchShipments() as FetchShipmentsThunk);
+      dispatch(fetchShipments());
     }
   }, [loadingStatus, dispatch]);
 
