@@ -21,6 +21,7 @@ import {
   Spinner,
   Link as ChakraLink,
   Button,
+  Select,
 } from "@chakra-ui/react";
 
 import { ArrowBackIcon } from "@chakra-ui/icons";
@@ -29,28 +30,55 @@ interface FormInputProps {
   label: string;
   name: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isSelect: boolean;
+  onChange: (
+    e:
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLInputElement>
+  ) => void;
 }
 
 const FormInput: React.FC<FormInputProps> = ({
   label,
   name,
   value,
-
+  isSelect,
   onChange,
 }) => (
   <FormControl mb={4}>
     <FormLabel>{label}</FormLabel>
-    <Input
-      size="sm"
-      type="text"
-      name={name}
-      defaultValue={value}
-      variant="filled"
-      onChange={onChange}
-    />
+    {isSelect ? (
+      <Select
+        size="sm"
+        name={name}
+        placeholder={value}
+        variant="filled"
+        onChange={(e) => onChange(e)}
+      >
+        {selectOptions.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.statusName}
+          </option>
+        ))}
+      </Select>
+    ) : (
+      <Input
+        size="sm"
+        type="text"
+        name={name}
+        defaultValue={value}
+        variant="filled"
+        onChange={(e) => onChange(e)}
+      />
+    )}
   </FormControl>
 );
+
+const selectOptions = [
+  { statusName: "'Shipped'", value: "'Shipped'" },
+  { statusName: "'Delivered'", value: "'Delivered'" },
+  { statusName: "'In Transit'", value: "'In Transit'" },
+];
 
 const ShipmentDetails: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -58,7 +86,7 @@ const ShipmentDetails: React.FC = () => {
   type FetchShipmentsThunk = ReturnType<typeof fetchShipments>;
 
   const shipmentStatus = useSelector(
-    (state: RootState) => state.shipments.status
+    (state: RootState) => state.shipments.dataStatus
   );
 
   const error = useSelector((state: RootState) => state.shipments.error);
@@ -157,14 +185,17 @@ const ShipmentDetails: React.FC = () => {
                   label: "status",
                   name: "status",
                   value: existingShipment.status,
+                  isSelect: true,
+                  selectOptions: selectOptions,
                 },
               ].map((field, index) => (
                 <GridItem colSpan={1} key={index}>
                   <FormInput
                     {...field}
-                    onChange={(e) =>
-                      handleFieldChange(field.name, e.target.value)
-                    }
+                    onChange={(
+                      e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+                    ) => handleFieldChange(field.name, e.target.value)}
+                    isSelect={field.name === "status"}
                   />
                 </GridItem>
               ))}
