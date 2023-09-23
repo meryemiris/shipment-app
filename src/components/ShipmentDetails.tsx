@@ -78,6 +78,7 @@ const ShipmentDetails: React.FC = () => {
       ...prevShipment!,
       [fieldName]: value,
     }));
+    console.log(shipment);
   };
 
   useEffect(() => {
@@ -103,7 +104,8 @@ const ShipmentDetails: React.FC = () => {
     return error;
   }
 
-  function handleUpdateShipment() {
+  function handleUpdateShipment(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     dispatch(
       actions.updateShipment({
         ...shipment,
@@ -127,46 +129,49 @@ const ShipmentDetails: React.FC = () => {
         </Heading>
 
         {existingShipment ? (
-          <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-            {[
-              {
-                label: "order No",
-                name: "orderNo",
-                value: existingShipment.orderNo,
-              },
-              { label: "date", name: "date", value: existingShipment.date },
-              {
-                label: "customer",
-                name: "customer",
-                value: existingShipment.customer,
-              },
-              {
-                label: "trackingNo",
-                name: "trackingNo",
-                value: existingShipment.trackingNo,
-              },
-              {
-                label: "consignee",
-                name: "consignee",
-                value: existingShipment.consignee,
-              },
-              {
-                label: "status",
-                name: "status",
-                value: existingShipment.status,
-              },
-            ].map((field, index) => (
-              <GridItem colSpan={1} key={index}>
-                <FormInput
-                  {...field}
-                  onChange={(e) =>
-                    handleFieldChange(field.name, e.target.value)
-                  }
-                />
-              </GridItem>
-            ))}
-            <Button onClick={handleUpdateShipment}>Save</Button>
-          </Grid>
+          <form onSubmit={handleUpdateShipment}>
+            {" "}
+            <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+              {[
+                {
+                  label: "order No",
+                  name: "orderNo",
+                  value: existingShipment.orderNo,
+                },
+                { label: "date", name: "date", value: existingShipment.date },
+                {
+                  label: "customer",
+                  name: "customer",
+                  value: existingShipment.customer,
+                },
+                {
+                  label: "trackingNo",
+                  name: "trackingNo",
+                  value: existingShipment.trackingNo,
+                },
+                {
+                  label: "consignee",
+                  name: "consignee",
+                  value: existingShipment.consignee,
+                },
+                {
+                  label: "status",
+                  name: "status",
+                  value: existingShipment.status,
+                },
+              ].map((field, index) => (
+                <GridItem colSpan={1} key={index}>
+                  <FormInput
+                    {...field}
+                    onChange={(e) =>
+                      handleFieldChange(field.name, e.target.value)
+                    }
+                  />
+                </GridItem>
+              ))}
+              <Button type="submit">Save</Button>
+            </Grid>
+          </form>
         ) : (
           <p>some error message</p>
         )}
