@@ -22,6 +22,7 @@ import {
 } from "@chakra-ui/react";
 
 import FormInput from "./FormInput";
+import ErrorAlert from "./Error";
 
 const selectOptions = [
   { statusName: "'Shipped'", value: "'Shipped'" },
@@ -80,11 +81,11 @@ const ShipmentDetails: React.FC = () => {
     existingShipment
   );
 
-  useEffect(() => {
-    if (existingShipment) {
-      setShipment(existingShipment);
-    }
-  }, [existingShipment]);
+  // useEffect(() => {
+  //   if (existingShipment) {
+  //     setShipment(existingShipment);
+  //   }
+  // }, [existingShipment]);
 
   useEffect(() => {
     if (loadingStatus === "idle") {
@@ -105,8 +106,13 @@ const ShipmentDetails: React.FC = () => {
     );
   }
   if (loadingStatus === "failed") {
-    return loadingError;
-  } // add error message
+    return (
+      <ErrorAlert
+        errorMessage={loadingError}
+        errorTitle={"Failed to load shipment data. Please try again later."}
+      />
+    );
+  }
 
   const handleFieldChange = (fieldName: string, value: string) => {
     setShipment((prevShipment) => ({
@@ -165,12 +171,15 @@ const ShipmentDetails: React.FC = () => {
             </Flex>
           </form>
         ) : (
-          <p>some error message</p>
-          //add error message
+          <ErrorAlert
+            errorMessage={"Please check the order number."}
+            errorTitle={"Shipment not found."}
+          />
         )}
 
         <ChakraLink as={ReactRouterLink} to={`/`}>
           <Button
+            mt={5}
             size={"sm"}
             color={"gray.500"}
             leftIcon={<ArrowBackIcon />}

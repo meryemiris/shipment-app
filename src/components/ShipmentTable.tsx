@@ -20,6 +20,8 @@ import {
   Flex,
 } from "@chakra-ui/react";
 
+import ErrorAlert from "./Error";
+
 export default function ShipmentTable() {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -49,8 +51,12 @@ export default function ShipmentTable() {
   }
 
   if (loadingStatus === "failed") {
-    return loadingError;
-    //add error message
+    return (
+      <ErrorAlert
+        errorMessage={loadingError}
+        errorTitle={"Failed to load shipment data. Please try again later."}
+      />
+    );
   }
 
   function handleRemoveShipment(orderNo: string) {
