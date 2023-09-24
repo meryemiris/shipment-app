@@ -3,7 +3,7 @@ import shipmentsReducer from "./shipment";
 
 const store = configureStore({
   reducer: {
-    shipments: shipmentsReducer,
+    shipmentsSlice: shipmentsReducer,
   },
 });
 

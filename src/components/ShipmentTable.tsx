@@ -22,14 +22,23 @@ import {
 
 import ErrorAlert from "./Error";
 
+const shipmentHeadings = [
+  "orderNo",
+  "date",
+  "customer",
+  "trackingNo",
+  "status",
+  "consignee",
+];
+
 export default function ShipmentTable() {
   const dispatch = useDispatch<AppDispatch>();
 
   const {
     dataStatus: loadingStatus,
     error: loadingError,
-    shipments: shipments,
-  } = useSelector((state: RootState) => state.shipments);
+    shipments,
+  } = useSelector((state: RootState) => state.shipmentsSlice);
 
   useEffect(() => {
     if (loadingStatus === "idle") {
@@ -53,7 +62,7 @@ export default function ShipmentTable() {
   if (loadingStatus === "failed") {
     return (
       <ErrorAlert
-        errorMessage={loadingError}
+        errorMessage={loadingError!}
         errorTitle={"Failed to load shipment data. Please try again later."}
       />
     );
@@ -75,6 +84,7 @@ export default function ShipmentTable() {
         <Td pr={1}>
           <ChakraLink as={ReactRouterLink} to={`/details/${shipment.orderNo}`}>
             <IconButton
+              size={"lg"}
               background="none"
               aria-label="Show Shipment Details"
               icon={<EditIcon color={"blue.500"} />}
@@ -83,6 +93,7 @@ export default function ShipmentTable() {
         </Td>
         <Td pl={1}>
           <IconButton
+            size={"lg"}
             onClick={() => handleRemoveShipment(shipment.orderNo)}
             background="none"
             aria-label="Delete Shipment"
@@ -92,15 +103,6 @@ export default function ShipmentTable() {
       </Tr>
     ));
   };
-
-  const shipmentHeadings = [
-    "orderNo",
-    "date",
-    "customer",
-    "trackingNo",
-    "status",
-    "consignee",
-  ];
 
   return (
     <TableContainer whiteSpace="pre-wrap">

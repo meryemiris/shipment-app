@@ -35,31 +35,53 @@ interface FormField {
   name: string;
   isSelect: boolean;
   isReadOnly: boolean;
+  isRequired: boolean;
   selectOptions?: { statusName: string; value: string }[];
 }
 
 const formFields: FormField[] = [
-  { label: "order No", name: "orderNo", isSelect: false, isReadOnly: true },
-  { label: "date", name: "date", isSelect: false, isReadOnly: false },
-  { label: "customer", name: "customer", isSelect: false, isReadOnly: false },
   {
-    label: "trackingNo",
+    label: "Order No",
+    name: "orderNo",
+    isSelect: false,
+    isReadOnly: true,
+    isRequired: false,
+  },
+  {
+    label: "Date",
+    name: "date",
+    isSelect: false,
+    isReadOnly: false,
+    isRequired: true,
+  },
+  {
+    label: "Customer",
+    name: "customer",
+    isSelect: false,
+    isReadOnly: false,
+    isRequired: true,
+  },
+  {
+    label: "Tracking No",
     name: "trackingNo",
     isSelect: false,
     isReadOnly: false,
+    isRequired: true,
   },
   {
-    label: "consignee",
+    label: "Consignee",
     name: "consignee",
     isSelect: false,
     isReadOnly: false,
+    isRequired: true,
   },
   {
-    label: "status",
+    label: "Status",
     name: "status",
     isSelect: true,
-    selectOptions,
     isReadOnly: false,
+    isRequired: false,
+    selectOptions,
   },
 ];
 
@@ -68,24 +90,24 @@ const ShipmentDetails: React.FC = () => {
   const navigate = useNavigate();
 
   const { dataStatus: loadingStatus, error: loadingError } = useSelector(
-    (state: RootState) => state.shipments
+    (state: RootState) => state.shipmentsSlice
   );
 
   const { orderNo } = useParams<{ orderNo: string }>();
 
   const existingShipment = useSelector((state: RootState) =>
-    state.shipments.shipments.find((s) => s.orderNo === orderNo)
+    state.shipmentsSlice.shipments.find((s) => s.orderNo === orderNo)
   );
 
   const [shipment, setShipment] = useState<Shipment | undefined>(
     existingShipment
   );
 
-  // useEffect(() => {
-  //   if (existingShipment) {
-  //     setShipment(existingShipment);
-  //   }
-  // }, [existingShipment]);
+  useEffect(() => {
+    if (existingShipment) {
+      setShipment(existingShipment);
+    }
+  }, [existingShipment]);
 
   useEffect(() => {
     if (loadingStatus === "idle") {
@@ -108,7 +130,7 @@ const ShipmentDetails: React.FC = () => {
   if (loadingStatus === "failed") {
     return (
       <ErrorAlert
-        errorMessage={loadingError}
+        errorMessage={loadingError!}
         errorTitle={"Failed to load shipment data. Please try again later."}
       />
     );
@@ -123,74 +145,68 @@ const ShipmentDetails: React.FC = () => {
 
   function handleUpdateShipment(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    dispatch(
-      actions.updateShipment({
-        ...shipment,
-      })
-    );
+    dispatch(actions.updateShipment(shipment));
     navigate("/");
   }
 
   return (
-    <Flex minWidth="80vh" flexDirection={"column"}>
-      <Box
-        borderWidth="1px"
-        borderRadius="lg"
-        overflow="hidden"
-        p={5}
-        m={3}
-        boxShadow="sm"
-      >
-        <Heading as="h2" color="gray.600" fontWeight="medium" size="sm" pb="6">
-          SHIPMENT DETAILS
-        </Heading>
+    <Box
+      borderWidth="1px"
+      borderRadius="lg"
+      overflow="hidden"
+      p={5}
+      m={3}
+      boxShadow="sm"
+    >
+      <Heading as="h2" color="gray.600" fontWeight="medium" size="sm" pb="6">
+        SHIPMENT DETAILS
+      </Heading>
 
-        {shipment ? (
-          <form onSubmit={handleUpdateShipment}>
-            <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-              {formFields.map((field, index) => (
-                <GridItem colSpan={1} key={index}>
-                  <FormInput
-                    label={field.label}
-                    name={field.name}
-                    value={shipment[field.name]}
-                    onChange={(e) =>
-                      handleFieldChange(field.name, e.target.value)
-                    }
-                    isSelect={field.isSelect}
-                    isReadOnly={field.isReadOnly}
-                    selectOptions={field.selectOptions}
-                  />
-                </GridItem>
-              ))}
-            </Grid>
-            <Flex mt={5} justifyContent={"flex-end"}>
-              <Button colorScheme="teal" type="submit">
-                Save Changes
-              </Button>
-            </Flex>
-          </form>
-        ) : (
-          <ErrorAlert
-            errorMessage={"Please check the order number."}
-            errorTitle={"Shipment not found."}
-          />
-        )}
+      {shipment ? (
+        <form onSubmit={handleUpdateShipment}>
+          <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+            {formFields.map((field, index) => (
+              <GridItem colSpan={1} key={index}>
+                <FormInput
+                  label={field.label}
+                  value={shipment[field.name]}
+                  onChange={(e) =>
+                    handleFieldChange(field.name, e.target.value)
+                  }
+                  isSelect={field.isSelect}
+                  isReadOnly={field.isReadOnly}
+                  isRequired={field.isRequired}
+                  selectOptions={field.selectOptions}
+                />
+              </GridItem>
+            ))}
+          </Grid>
+          <Flex mt={5} justifyContent={"flex-end"}>
+            <Button colorScheme="teal" type="submit">
+              Save Changes
+            </Button>
+          </Flex>
+        </form>
+      ) : (
+        <ErrorAlert
+          errorMessage={"Please check the order number."}
+          errorTitle={"Shipment not found."}
+        />
+      )}
 
-        <ChakraLink as={ReactRouterLink} to={`/`}>
-          <Button
-            mt={5}
-            size={"sm"}
-            color={"gray.500"}
-            leftIcon={<ArrowBackIcon />}
-            variant="outline"
-            aria-label="Back to All Shipments"
-          >
-            Back to All
-          </Button>
-        </ChakraLink>
-      </Box>
-    </Flex>
+      <ChakraLink as={ReactRouterLink} to={`/`}>
+        <Button
+          mt={5}
+          size={"sm"}
+          color={"gray.500"}
+          leftIcon={<ArrowBackIcon />}
+          variant="outline"
+          aria-label="Back to All Shipments"
+        >
+          Back to All
+        </Button>
+      </ChakraLink>
+    </Box>
   );
 };
 

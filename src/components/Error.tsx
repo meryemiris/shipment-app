@@ -6,8 +6,8 @@ import {
 } from "@chakra-ui/react";
 
 interface ErrorAlertProps {
-  errorMessage: string | null | undefined;
-  errorTitle: string | null | undefined;
+  errorMessage: string;
+  errorTitle: string;
 }
 
 const ErrorAlert: React.FC<ErrorAlertProps> = ({
