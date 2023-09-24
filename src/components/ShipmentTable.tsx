@@ -1,26 +1,22 @@
 import { useEffect } from "react";
-import { Link as ReactRouterLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { AppDispatch, RootState } from "../store/store";
-import { fetchShipments, actions } from "../store/shipment";
+import { actions, fetchShipments } from "../store/shipment";
 
-import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
-import { Link as ChakraLink } from "@chakra-ui/react";
 import {
   Table,
   Thead,
   Tbody,
   Tr,
   Th,
-  Td,
-  IconButton,
   TableContainer,
   Spinner,
   Flex,
 } from "@chakra-ui/react";
 
 import ErrorAlert from "./Error";
+import ShipmentItem from "./ShipmentItem";
 
 const shipmentHeadings = [
   "orderNo",
@@ -72,38 +68,6 @@ export default function ShipmentTable() {
     dispatch(actions.removeShipment(orderNo));
   }
 
-  const mapShipments = () => {
-    return shipments.map((shipment, index) => (
-      <Tr key={index}>
-        <Td>{shipment.orderNo}</Td>
-        <Td>{shipment.date}</Td>
-        <Td>{shipment.customer}</Td>
-        <Td>{shipment.trackingNo}</Td>
-        <Td>{shipment.status}</Td>
-        <Td>{shipment.consignee}</Td>
-        <Td pr={1}>
-          <ChakraLink as={ReactRouterLink} to={`/details/${shipment.orderNo}`}>
-            <IconButton
-              size={"lg"}
-              background="none"
-              aria-label="Show Shipment Details"
-              icon={<EditIcon color={"blue.500"} />}
-            />
-          </ChakraLink>
-        </Td>
-        <Td pl={1}>
-          <IconButton
-            size={"lg"}
-            onClick={() => handleRemoveShipment(shipment.orderNo)}
-            background="none"
-            aria-label="Delete Shipment"
-            icon={<DeleteIcon color={"red.500"} />}
-          />
-        </Td>
-      </Tr>
-    ));
-  };
-
   return (
     <TableContainer whiteSpace="pre-wrap">
       <Table maxWidth="100%" variant="striped">
@@ -114,7 +78,15 @@ export default function ShipmentTable() {
             ))}
           </Tr>
         </Thead>
-        <Tbody>{mapShipments()}</Tbody>
+        <Tbody>
+          {shipments.map((shipment) => (
+            <ShipmentItem
+              key={shipment.orderNo}
+              shipment={shipment}
+              onRemove={handleRemoveShipment}
+            />
+          ))}
+        </Tbody>
       </Table>
     </TableContainer>
   );

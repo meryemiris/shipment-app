@@ -8,7 +8,6 @@ export interface Shipment {
   trackingNo: string;
   status: "Shipped" | "Delivered" | "In Transit";
   consignee: string;
-  [key: string]: string;
 }
 
 export interface ShipmentState {
@@ -25,8 +24,6 @@ const initialState: ShipmentState = {
   error: null,
 };
 
-// https://my.api.mockaroo.com/shipments.json?key=5e0b62d0
-// ../../shipment.txt
 export const fetchShipments = createAsyncThunk(
   "shipment/fetchShipments",
   async () => {
