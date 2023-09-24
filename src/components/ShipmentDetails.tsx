@@ -81,6 +81,12 @@ const ShipmentDetails: React.FC = () => {
   );
 
   useEffect(() => {
+    if (existingShipment) {
+      setShipment(existingShipment);
+    }
+  }, [existingShipment]);
+
+  useEffect(() => {
     if (loadingStatus === "idle") {
       dispatch(fetchShipments());
     }
@@ -133,7 +139,7 @@ const ShipmentDetails: React.FC = () => {
           SHIPMENT DETAILS
         </Heading>
 
-        {existingShipment ? (
+        {shipment ? (
           <form onSubmit={handleUpdateShipment}>
             <Grid templateColumns="repeat(2, 1fr)" gap={4}>
               {formFields.map((field, index) => (
@@ -141,7 +147,7 @@ const ShipmentDetails: React.FC = () => {
                   <FormInput
                     label={field.label}
                     name={field.name}
-                    value={existingShipment[field.name]}
+                    value={shipment[field.name]}
                     onChange={(e) =>
                       handleFieldChange(field.name, e.target.value)
                     }
