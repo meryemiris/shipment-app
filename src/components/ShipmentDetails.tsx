@@ -23,6 +23,45 @@ import {
 
 import FormInput from "./FormInput";
 
+const selectOptions = [
+  { statusName: "'Shipped'", value: "'Shipped'" },
+  { statusName: "'Delivered'", value: "'Delivered'" },
+  { statusName: "'In Transit'", value: "'In Transit'" },
+];
+
+interface FormField {
+  label: string;
+  name: string;
+  isSelect: boolean;
+  isReadOnly: boolean;
+  selectOptions?: { statusName: string; value: string }[];
+}
+
+const formFields: FormField[] = [
+  { label: "order No", name: "orderNo", isSelect: false, isReadOnly: true },
+  { label: "date", name: "date", isSelect: false, isReadOnly: false },
+  { label: "customer", name: "customer", isSelect: false, isReadOnly: false },
+  {
+    label: "trackingNo",
+    name: "trackingNo",
+    isSelect: false,
+    isReadOnly: false,
+  },
+  {
+    label: "consignee",
+    name: "consignee",
+    isSelect: false,
+    isReadOnly: false,
+  },
+  {
+    label: "status",
+    name: "status",
+    isSelect: true,
+    selectOptions,
+    isReadOnly: false,
+  },
+];
+
 const ShipmentDetails: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -79,45 +118,6 @@ const ShipmentDetails: React.FC = () => {
     );
     navigate("/");
   }
-
-  const selectOptions = [
-    { statusName: "'Shipped'", value: "'Shipped'" },
-    { statusName: "'Delivered'", value: "'Delivered'" },
-    { statusName: "'In Transit'", value: "'In Transit'" },
-  ];
-
-  interface FormField {
-    label: string;
-    name: string;
-    isSelect: boolean;
-    isReadOnly: boolean;
-    selectOptions?: { statusName: string; value: string }[];
-  }
-
-  const formFields: FormField[] = [
-    { label: "order No", name: "orderNo", isSelect: false, isReadOnly: true },
-    { label: "date", name: "date", isSelect: false, isReadOnly: false },
-    { label: "customer", name: "customer", isSelect: false, isReadOnly: false },
-    {
-      label: "trackingNo",
-      name: "trackingNo",
-      isSelect: false,
-      isReadOnly: false,
-    },
-    {
-      label: "consignee",
-      name: "consignee",
-      isSelect: false,
-      isReadOnly: false,
-    },
-    {
-      label: "status",
-      name: "status",
-      isSelect: true,
-      selectOptions,
-      isReadOnly: false,
-    },
-  ];
 
   return (
     <Flex minWidth="80vh" flexDirection={"column"}>

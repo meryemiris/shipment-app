@@ -101,8 +101,8 @@ export default function ShipmentTable() {
       <Table maxWidth="100%" variant="striped">
         <Thead>
           <Tr>
-            {shipmentHeadings.map((h) => (
-              <Th>{h}</Th>
+            {shipmentHeadings.map((h, index) => (
+              <Th key={index}>{h}</Th>
             ))}
           </Tr>
         </Thead>
