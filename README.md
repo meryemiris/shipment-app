@@ -1,6 +1,6 @@
 # Shipment Management Application
 
-Welcome to the Shipment Management Application! This web-based tool allows you to view, edit, and manage shipment details with ease. Built using React, Redux, Chakra UI, and React Router, this application streamlines the management of shipments.
+Welcome to the Shipment Management Application! This web-based tool allows you to view, edit, and manage shipment details with ease. Built using React, Redux Toolkit, Chakra UI, and React Router, this application streamlines the management of shipments.
 
 ## Table of Contents
 
@@ -48,7 +48,7 @@ To start using the Shipment Management Application, follow these steps:
 
 5. **Make Changes**: You can make edits, save changes, or remove shipments as needed.
 
-Please ensure that you have the correct import statements and configurations in your code, especially for React Router and Redux. Fix any import or usage issues before running the application.
+Please ensure that you have the correct import statements and configurations in your code, especially for React Router and Redux Toolkit. Fix any import or usage issues before running the application.
 
 ## Components
 
@@ -94,7 +94,7 @@ The Shipment Management Application is built around the following components:
 
 ## Redux State Management
 
-- The application uses Redux for state management.
+- The application uses Redux Toolkit for state management.
 - Redux actions and reducers are defined in the `store` directory.
 - The primary state includes `shipments`, `selectedShipment`, `dataStatus`, and `error`.
 - Async data fetching is managed using `createAsyncThunk` for fetching shipment data.
