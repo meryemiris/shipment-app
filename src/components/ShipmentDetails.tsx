@@ -32,7 +32,7 @@ const selectOptions = [
 
 interface FormField {
   label: string;
-  name: string;
+  name: keyof Shipment;
   isSelect: boolean;
   isReadOnly: boolean;
   isRequired: boolean;
